@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Core Colony</title>
+  <style>
+    :root {
+      --bg: #08141c;
+      --panel: rgba(11, 24, 32, 0.9);
+      --panel-border: #2b5869;
+      --text: #dfeef7;
+      --muted: #91afbd;
+      --accent: #6ff2ff;
+      --gold: #ffd166;
+      --danger: #ff6b6b;
+    }
+
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      overflow: hidden;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+    }
+
+    #game-shell {
+      position: relative;
+      width: min(100vw, 1500px);
+      height: min(100vh, 900px);
+      background: #030d13;
+      border: 2px solid #163340;
+      box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    }
+
+    canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      image-rendering: pixelated;
+      background: #08151b;
+      cursor: crosshair;
+    }
+
+    #pauseMenu {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(3, 10, 14, 0.68);
+      backdrop-filter: blur(2px);
+    }
+
+    #pauseMenu.visible {
+      display: flex;
+    }
+
+    .panel {
+      width: min(420px, 80vw);
+      background: rgba(13, 24, 32, 0.95);
+      border: 2px solid var(--panel-border);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+      padding: 20px 18px 14px;
+    }
+
+    .panel h2 {
+      margin: 0 0 16px;
+      font-size: 28px;
+      letter-spacing: 1px;
+      color: var(--gold);
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .menu-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      appearance: none;
+      border: 2px solid #2c5364;
+      background: linear-gradient(#122931, #0d1d27);
+      color: var(--text);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 12px 18px;
+      cursor: pointer;
+      transition: transform 0.08s ease, filter 0.12s ease, border-color 0.12s ease;
+    }
+
+    button:hover {
+      border-color: #3a7389;
+      filter: brightness(1.08);
+    }
+
+    button:active {
+      transform: translateY(1px);
+    }
+
+    #resumeBtn { border-color: #377d83; }
+    #newGameBtn { border-color: #6f7b50; }
+  </style>
+</head>
+<body>
+  <div id="game-shell">
+    <canvas id="gameCanvas" width="1280" height="720"></canvas>
+
+    <div id="pauseMenu">
+      <div class="panel">
+        <h2>Pause</h2>
+        <div class="menu-buttons">
+          <button id="resumeBtn">Resume</button>
+          <button id="newGameBtn">New Game</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
