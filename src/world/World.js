@@ -1,3 +1,5 @@
+import { buildWorldPropAtlas } from '../render/sprites/worldProps.js';
+
 function mulberry32(a) {
   return function () {
     let t = (a += 0x6D2B79F5);
@@ -15,6 +17,7 @@ export class World {
     this.viewWidth = 1280;
     this.viewHeight = 720;
 
+    this.propAtlas = buildWorldPropAtlas();
     this.tiles = [];
     this.decorations = [];
     this.resourceNodes = [];
@@ -69,21 +72,42 @@ export class World {
 
         if (centerDist > 90) {
           const r = rand();
-          if (r < 0.04) {
+
+          if (r < 0.12) {
+            const treeKinds = ['mushroom', 'glow', 'palm'];
+            const kind = treeKinds[Math.floor(rand() * treeKinds.length)];
+            this.decorations.push({
+              type: 'tree',
+              kind,
+              x: worldX,
+              y: worldY,
+              radius: 16 + rand() * 8,
+              solid: true,
+              sprite: this.propAtlas.trees[kind]
+            });
+          } else if (r < 0.28) {
+            const plantKinds = ['bulb', 'fern', 'coralBush', 'berry', 'grass', 'violet', 'flowers', 'mushrooms'];
+            const kind = plantKinds[Math.floor(rand() * plantKinds.length)];
+            this.decorations.push({
+              type: 'plant',
+              kind,
+              x: worldX,
+              y: worldY,
+              radius: 10 + rand() * 6,
+              solid: false,
+              sprite: this.propAtlas.plants[kind]
+            });
+          } else if (r < 0.40) {
+            const rockKinds = ['small', 'medium', 'large', 'mossyS', 'mossyM'];
+            const kind = rockKinds[Math.floor(rand() * rockKinds.length)];
             this.decorations.push({
               type: 'rock',
+              kind,
               x: worldX,
               y: worldY,
               radius: 12 + rand() * 8,
-              solid: true
-            });
-          } else if (r < 0.08) {
-            this.decorations.push({
-              type: 'plant',
-              x: worldX,
-              y: worldY,
-              radius: 8 + rand() * 6,
-              solid: true
+              solid: true,
+              sprite: this.propAtlas.rocks[kind]
             });
           }
         }
@@ -109,6 +133,7 @@ export class World {
         if (dist > 180 && dist < 860) {
           const id = `node_${i}_${Math.round(x)}_${Math.round(y)}`;
           const amount = resource === 'ORE' ? 2 + Math.floor(rand() * 3) : 1 + Math.floor(rand() * 3);
+          const sizeKey = amount <= 2 ? 'Small' : amount === 3 ? 'Medium' : 'Large';
 
           this.resourceNodes.push({
             id,
@@ -119,7 +144,10 @@ export class World {
             health: resource === 'ORE' ? 18 : 16,
             maxHealth: resource === 'ORE' ? 18 : 16,
             amount,
-            depleted: false
+            depleted: false,
+            sprite: resource === 'ORE'
+              ? this.propAtlas.nodes[`ore${sizeKey}`] || this.propAtlas.nodes.oreSmall
+              : this.propAtlas.nodes[`crystal${sizeKey}`] || this.propAtlas.nodes.crystalSmall
           });
           break;
         }
